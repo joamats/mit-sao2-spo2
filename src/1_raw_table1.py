@@ -4,12 +4,13 @@ import pandas as pd
 data = pd.read_csv('data/MIMIC_IV.csv')
 
 data['race_white'] = data.race_group == 'White'
+d
 
 groupby = ['race_white']
 
 categorical = ['hidden_hypoxemia', 'gender', 'race_group', 'language',
-               'ventilation_status', 'invasive_vent', 'rrt']
-               #'heart_rhythm']
+               'ventilation_status', 'invasive_vent', 'rrt',
+               'heart_rhythm']
 
 nonnormal = ['SaO2', 'delta_SpO2', 'SpO2', 'anchor_age', 'BMI',
              'los_hospital', 'los_icu', 'CCI', 'SOFA_admission',
@@ -32,4 +33,4 @@ table1_raw = TableOne(data, columns=categorical+nonnormal,
                       smd=True, 
                       dip_test=True, normal_test=True, tukey_test=True, htest_name=True)
 
-table1_raw.to_excel('EDA/table1_raw.xlsx')
+table1_raw.to_excel('EDA/table1_rawW.xlsx')

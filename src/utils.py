@@ -16,6 +16,15 @@ def load_model(filename):
         model = pickle.load(file)
     return model
 
+# Adjusted R2
+def adj_r2(r2, y_test, X_test):
+    n = len(y_test)
+    k = X_test.shape[1]
+    return 1 - (1 - r2) * (n - 1) / (n - k - 1)
+
+def rmse(y_test, y_pred):
+    return np.sqrt(mean_squared_error(y_test, y_pred))
+
 def evaluate_model(model, X_test, y_test):
     """Evaluate a model on a test set"""
     # Make predictions on the validation set
@@ -24,15 +33,6 @@ def evaluate_model(model, X_test, y_test):
     # Compute evaluation metrics on Validation
     r2 = r2_score(y_test, y_pred)
 
-    # Adjusted R2
-    def adj_r2(r2, y_test, X_test):
-        n = len(y_test)
-        k = X_test.shape[1]
-        return 1 - (1 - r2) * (n - 1) / (n - k - 1)
-    
-    def rmse(y_test, y_pred):
-        return np.sqrt(mean_squared_error(y_test, y_pred))
-    
     def create_results_df(y_test, X_test, y_pred, race):
 
         label, idxs = race[0], race[1] 

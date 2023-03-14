@@ -8,6 +8,10 @@ y_test = pd.read_csv('data/ML/y_test.csv')
 filename = "models/xgboost.pkl"
 model = load_model(filename)
 
+y_pred = model.predict(X_test)
+
+print(f"R2: {r2_score(y_test, y_pred)}")
+
 # Make predictions on the validation set
-evaluate_model(model, X_test, y_test)
+#evaluate_model(model, X_test, y_test)
 

@@ -9,11 +9,11 @@ data.delta_vent_start = data.delta_vent_start.fillna(0)
 data.delta_rrt = data.delta_rrt.fillna(0)
 data.delta_vp_start = data.delta_vp_start.fillna(0)
 
-fts = ['SpO2', 'delta_SpO2',
+fts = ['SpO2', 
        'anchor_age','sex_female', 'race_group', 'language',
        'CCI', 'SOFA_admission',
        'sofa_coag', 'sofa_liver', 'sofa_cv',
-       'sofa_cns', 'sofa_renal', 'sofa_resp','FiO2',
+       'sofa_cns', 'sofa_renal', 'FiO2',
        'ventilation_status', 'invasive_vent', 'rrt', 'vasopressors',
        'delta_vent_start', 'delta_rrt', 'delta_vp_start',
        'norepinephrine_equivalent_dose', 

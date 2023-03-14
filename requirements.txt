@@ -1,0 +1,7 @@
+tableone
+lazypredict
+scikit-learn
+pandas
+numpy
+openpyxl
+tabulate

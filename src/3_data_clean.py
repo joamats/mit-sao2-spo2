@@ -2,6 +2,9 @@ import pandas as pd
 
 df = pd.read_csv('data/MIMIC_IV.csv')
 
+# Clamp values to 60-100
+df = df[(df.SaO2 <= 100) & (df.SpO2 <= 100) & (df.SaO2 >= 60) & (df.SpO2 >= 60)]
+
 # Drop features with high missingness, as reported in table 1 raw
 df = df.drop(columns=['BMI', 'd_dimer', 'fibrinogen', 'thrombin',
                       'bilirubin_direct', 'bilirubin_indirect',
@@ -24,6 +27,8 @@ df['race_group'] = df['race_group'].map({'White': 1,
                                          'Other': 4,
                                          'Black': 5})
 
+df['vasopressors'] = df.norepinephrine_equivalent_dose.apply(lambda x: 1 if x > 0 else 0)
+
 # Replace nan with 0 in SOFA -> Assuming best case scenario
 df['sofa_coag'] = df['sofa_coag'].fillna(0)
 df['sofa_liver'] = df['sofa_liver'].fillna(0)
@@ -44,7 +49,7 @@ df['ventilation_status'] = df['ventilation_status'].fillna(0)
 df['FiO2'] = df['FiO2'].fillna(21) # Room Air O2 %
 
 # Let's keep just the first pair per patient (it's been sorted by subject_id, stay_id,time)
-df_final = df.groupby('subject_id').first().reset_index()
+df_final = df#.groupby('subject_id').first().reset_index()
 
 print(f"{(len(df) - len(df_final))/len(df)*100:.2f}% rows dropped \
       \n{len(df_final)} rows remaining")

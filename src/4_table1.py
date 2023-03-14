@@ -34,7 +34,6 @@ nonnormal = ['SaO2', 'SpO2', 'delta_SpO2', 'sao2-spo2', 'anchor_age',
              'heart_rate', 'mbp', 'resp_rate', 'temperature', 'glucose']
 
 # Categorical Variables
-data['vasopressors'] = data.norepinephrine_equivalent_dose.apply(lambda x: "Received" if x > 0 else "No")
 
 data['race_group'] = data['race_group'].map({1: 'White',
                                              2: 'Hispanic',
@@ -49,6 +48,7 @@ data['ventilation_status'] = data['ventilation_status'].map({0: 'None',
                                                              4: 'Tracheostomy'})
 
 data['gender'] = data['gender'].map({'F': 'Female', 'M': 'Male'})
+data['vasopressors'] = data['vasopressors'].map({1: 'Received', 0: 'No'})
 data['rrt'] = data['rrt'].map({1: 'Received', 0: 'No'})
 data['invasive_vent'] = data['invasive_vent'].map({1: 'Received', 0: 'No'})
 data['hidden_hypoxemia'] = data['hidden_hypoxemia'].map({1: 'Present', 0: 'No'})

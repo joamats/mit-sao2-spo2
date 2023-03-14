@@ -45,12 +45,14 @@ def evaluate_model(model, X_test, y_test):
         bas_r2 = r2_score(y_test, X_test.SpO2)
         bas_adj_r2 = adj_r2(bas_r2, y_test, X_test)
         bas_rmse = rmse(y_test, X_test.SpO2)
-        bas_hh = len(X_test[(y_test.SaO2 < 88) & (X_test.SpO2 >= 88)]) / len(X_test)
+        b_hh = X_test[(y_test.SaO2 < 88) & (X_test.SpO2 >= 88)]
+        bas_hh = len(b_hh)# / len(X_test)
 
         model_r2 = r2_score(y_test, y_pred)
         model_adj_r2 = adj_r2(model_r2, y_test, X_test)
         model_rmse = rmse(y_test, y_pred)
-        model_hh = len(X_test[(y_test.SaO2 < 88) & (y_pred >= 88)]) / len(X_test)
+        m_hh = X_test[(y_test.SaO2 < 88) & (y_pred >= 88)]
+        model_hh = len(m_hh)# / len(X_test)
 
         # Create a dataframe to store the results
         results = pd.DataFrame({'Race': [label],

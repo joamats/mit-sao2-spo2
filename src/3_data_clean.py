@@ -3,7 +3,7 @@ import pandas as pd
 df = pd.read_csv('data/MIMIC_IV.csv')
 
 # Clamp values to 60-100
-df = df[(df.SaO2 <= 100) & (df.SpO2 <= 100) & (df.SaO2 >= 60) & (df.SpO2 >= 60)]
+df = df[(df.SaO2 <= 100) & (df.SpO2 <= 100) & (df.SaO2 >= 65) & (df.SpO2 >= 65)]
 
 # Drop features with high missingness, as reported in table 1 raw
 df = df.drop(columns=['BMI', 'd_dimer', 'fibrinogen', 'thrombin',

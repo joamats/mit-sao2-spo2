@@ -1,6 +1,5 @@
 from utils import *
 
-
 # Load test data
 X_test = pd.read_csv('data/ML/X_test.csv')
 y_test = pd.read_csv('data/ML/y_test.csv')

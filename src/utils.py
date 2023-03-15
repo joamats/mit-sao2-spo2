@@ -1,8 +1,8 @@
 import pickle 
 import pandas as pd
 import numpy as np
+from tqdm import tqdm
 from sklearn.metrics import r2_score, mean_squared_error
-from tabulate import tabulate
 
 
 def save_model(model, filename):
@@ -25,7 +25,7 @@ def adj_r2(r2, y_test, X_test):
 def rmse(y_test, y_pred):
     return np.sqrt(mean_squared_error(y_test, y_pred))
 
-def evaluate_model(model, X_test, y_test):
+def evaluate_model(model, X_test, y_test, name):
     """Evaluate a model on a test set"""
     # Make predictions on the validation set
     y_pred = model.predict(X_test)
@@ -65,10 +65,10 @@ def evaluate_model(model, X_test, y_test):
                                 'Model Adj R\u00B2': [model_adj_r2],
                                 'Model RMSE': [model_rmse],
                                 'Model HH': [model_hh],
-                                'Lift R\u00B2': [model_r2 - bas_r2],
-                                'Lift Adj R\u00B2': [model_adj_r2 - bas_adj_r2],
-                                'Drop RMSE': [bas_rmse - model_rmse],
-                                'Drop HH': [bas_hh - model_hh]
+                                'Delta R\u00B2': [model_r2 - bas_r2],
+                                'Delta Adj R\u00B2': [model_adj_r2 - bas_adj_r2],
+                                'Delta RMSE': [model_rmse - bas_rmse],
+                                'Delta HH': [model_hh - bas_hh]
                                 })
         
         return results
@@ -92,5 +92,5 @@ def evaluate_model(model, X_test, y_test):
     pivoted_df = melted_df.pivot(index=['Metric'], columns='Race', values='value')
     pivoted_df = pivoted_df[race_order].reindex(metric_order)
 
-    pivoted_df.to_excel('results/xgb_results.xlsx')
-    pivoted_df.to_latex('results/xgb_results.tex')
+    pivoted_df.to_excel(f'results/{name}.xlsx')
+    pivoted_df.to_latex(f'results/{name}.tex')

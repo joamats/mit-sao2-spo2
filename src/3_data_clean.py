@@ -27,6 +27,42 @@ df['race_group'] = df['race_group'].map({'White': 1,
                                          'Other': 4,
                                          'Black': 5})
 
+# mapping of categories
+# normal (or near normal) rhythm: 0
+# bradycardia with pacer: 1
+# atrial dysrthymias: 2
+# bundle branch blocks: 3
+# ventricular dysrhythmias = very bad: 4
+
+category_map = {'1st AV (First degree AV Block)': 0,
+                '2nd AV M2 (Second degree AV Block - Mobitz 2)': 1,
+                '2nd AV W-M1 (Second degree AV Block Wenckebach - Mobitz1)': 1,
+                '3rd AV (Complete Heart Block)': 1,
+                'A Flut (Atrial Flutter)': 2,
+                'A Paced': 1,
+                'AF (Atrial Fibrillation)': 2,
+                'AV Paced': 1,
+                'Asystole': 4,
+                'Idioventricular': 3,
+                'JR (Junctional Rhythm)': 3,
+                'JT (Junctional Tachycardia)': 3,
+                'LBBB (Left Bundle Branch Block)': 3,
+                'MAT (Multifocal atrial tachycardia)': 2,
+                'PAT (Paroxysmal Atrial Tachycardia)': 2,
+                'RBBB (Right Bundle Branch Block)': 3,
+                'SA (Sinus Arrhythmia)': 2,
+                'SB (Sinus Bradycardia)': 0,
+                'SR (Sinus Rhythm)': 0,
+                'ST (Sinus Tachycardia)': 0,
+                'SVT (Supra Ventricular Tachycardia)': 2,
+                'V Paced': 3,
+                'VF (Ventricular Fibrillation)': 4,
+                'VT (Ventricular Tachycardia)': 4,
+                'WAP (Wandering atrial pacemaker)': 1}
+
+category_column = df['heart_rhythm']
+df['heart_rhythm'] = category_column.map(category_map)
+
 df['vasopressors'] = df.norepinephrine_equivalent_dose.apply(lambda x: 1 if x > 0 else 0)
 
 # Replace nan with 0 in SOFA -> Assuming best case scenario
@@ -42,9 +78,10 @@ df['norepinephrine_equivalent_dose'] = df['norepinephrine_equivalent_dose'].fill
 # No ventilation
 df['ventilation_status'] = df['ventilation_status'].fillna(0)
 
-#df['delta_vent_start'] = df['delta_vent_start'].fillna(0)
-#df['delta_rrt'] = df['delta_rrt'].fillna(0)
-#df['delta_vp_start'] = df['delta_vp_start'].fillna(0)
+# impute missing data before split -> need to find a better way!
+df['delta_vent_start'] = df['delta_vent_start'].fillna(0)
+df['delta_rrt'] = df['delta_rrt'].fillna(0)
+df['delta_vp_start'] = df['delta_vp_start'].fillna(0)
 
 df['FiO2'] = df['FiO2'].fillna(21) # Room Air O2 %
 

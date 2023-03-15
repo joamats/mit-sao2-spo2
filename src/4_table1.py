@@ -16,10 +16,12 @@ data['los_icu_surv'] = data[data.mortality_in == 0].los_icu
 
 data['sao2-spo2'] = data['SaO2'] - data['SpO2']
 
-nonnormal = ['SaO2', 'SpO2', 'delta_SpO2', 'sao2-spo2', 'anchor_age',
+nonnorm_p = ['anchor_age',
              'los_hosp_dead', 'los_hosp_surv',
              'los_icu_dead', 'los_icu_surv',
-             'CCI', 'SOFA_admission',
+             'CCI', 'SOFA_admission']
+
+nonnorm_s = ['SaO2', 'SpO2', 'delta_SpO2', 'sao2-spo2', 
              'sofa_coag', 'sofa_liver', 'sofa_cv',
              'sofa_cns', 'sofa_renal', 'sofa_resp','FiO2',
              'delta_vent_start', 'delta_rrt', 'delta_vp_start',
@@ -54,7 +56,11 @@ data['invasive_vent'] = data['invasive_vent'].map({1: 'Received', 0: 'No'})
 data['hidden_hypoxemia'] = data['hidden_hypoxemia'].map({1: 'Present', 0: 'No'})
 data['mortality_in'] = data['mortality_in'].map({1: 'Died', 0: 'Survived'})
 data['language'] = data['language'].map({1: 'Proficient', 0: 'Limited Proficiency'})
-
+data['heart_rhythm'] = data['heart_rhythm'].map({0: 'Normal (or near normal) Rhythm',
+                                                 1: 'Bradycardia with Pacer',
+                                                 2: 'Atrial Dysrhythmias',
+                                                 3: 'Bundle Branch Blocks',
+                                                 4: 'Ventricular Dysrhythmias (severe)'})
 order = {"gender": ["Female", "Male"],
          "vasopressors": ["Received", "No"],
          "rrt": ["Received", "No"],
@@ -65,26 +71,34 @@ order = {"gender": ["Female", "Male"],
          "ventilation_status": ["None", "Supplemental Oxygen",
                                 "Non-Invasive Vent. / HFNC", "Invasive Vent.", "Tracheostomy"]}
 
-limit = {"gender": 1,
-         "vasopressors": 1,
-         "rrt": 1,
-         "invasive_vent": 1,
-         "hidden_hypoxemia": 1,
-         "mortality_in": 1,
-         "language": 1}
+limit_p = {"gender": 1,
+           "mortality_in": 1,
+           "language": 1
+           }
 
-labels = {'gender': 'Sex',
-          'vasopressors': 'Vasopressor(s)',
-          'rrt': "RRT",
-          'invasive_vent': "Invasive Ventilation",
-          'hidden_hypoxemia': "Hidden Hypoxemia",
-          'mortality_in': "In-Hospital Mortality",
-          'language': "English Proficiency",
-          'ventilation_status': "Type of Ventilation",
-          'race_group': "Race"}
+limit_s = {"vasopressors": 1,
+           "rrt": 1,
+           "invasive_vent": 1,
+           "hidden_hypoxemia": 1
+           }
 
-categorical = ['mortality_in','hidden_hypoxemia', 'gender', 'race_group', 'language',
-               'ventilation_status', 'invasive_vent', 'rrt', 'vasopressors']
+labls_p = {'anchor_age': 'Age',
+           'gender': 'Sex',
+           'mortality_in': "In-Hospital Mortality",
+           'language': "English Proficiency",
+           'race_group': "Race"
+           }
+
+labls_s = {'vasopressors': 'Vasopressor(s)',
+           'rrt': "RRT",
+           'invasive_vent': "Invasive Ventilation",
+           'hidden_hypoxemia': "Hidden Hypoxemia",
+           'ventilation_status': "Type of Ventilation",
+          }
+
+categ_p = ['hidden_hypoxemia', 'ventilation_status', 'invasive_vent', 'rrt', 'vasopressors']
+
+categ_s = ['mortality_in','gender', 'race_group', 'language',]
 
 # Create a TableOne 
 table1_raw = TableOne(data, columns=categorical+nonnormal,

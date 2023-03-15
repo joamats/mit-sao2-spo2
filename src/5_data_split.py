@@ -1,38 +1,73 @@
 import pandas as pd
-from sklearn.model_selection import GroupShuffleSplit
+from sklearn.model_selection import GroupShuffleSplit, ShuffleSplit
 
 # load data
 data = pd.read_csv('data/MIMIC_IV_clean.csv')
 
-fts = ['SpO2', 
+# need to check who's the people being dropped!
+data = data[data['delta_SpO2'] >= -90]
+
+bas = ['SpO2', 'delta_SpO2',
        'anchor_age','sex_female', 'race_group', 'language',
-       'CCI', 'SOFA_admission',
-       'sofa_coag', 'sofa_liver', 'sofa_cv',
-       'sofa_cns', 'sofa_renal', 'sofa_resp','FiO2',
-       'ventilation_status', 'invasive_vent', 'rrt', 'vasopressors',
+       'CCI', 'SOFA_admission']
+
+rxs = ['ventilation_status', 'invasive_vent', 'rrt',
        'delta_vent_start', 'delta_rrt', 'delta_vp_start',
-       'norepinephrine_equivalent_dose', 
+       'vasopressors', 'norepinephrine_equivalent_dose']
+
+fts = ['FiO2',       
+       'sofa_coag', 'sofa_liver', 'sofa_cv', 'sofa_cns', 'sofa_renal', 'sofa_resp',
        'hemoglobin', 'hematocrit', 'mch', 'mchc', 'mcv', 'platelet',
        'rbc', 'rdw', 'wbc', 'inr', 'pt', 'ptt', 'alt', 'alp', 'ast',
        'bilirubin_total', 'albumin', 'aniongap',
        'bicarbonate', 'bun', 'calcium', 'chloride', 'creatinine',
        'glucose_lab', 'sodium', 'potassium', 'ph', 'lactate',
-       'heart_rate', 'mbp', 'resp_rate', 'temperature', 'glucose',
-       'heart_rhythm'
-      ]
+       'heart_rate', 'mbp', 'resp_rate', 'temperature',
+       'glucose', 'heart_rhythm']
 
-target = ['SaO2'] 
+deltas = ['delta_FiO2',
+          'delta_sofa_coag', 'delta_sofa_liver', 'delta_sofa_cv',
+          'delta_sofa_cns', 'delta_sofa_renal', 'delta_sofa_resp',
+          'delta_hemoglobin', 'delta_hematocrit', 'delta_mch', 'delta_mchc',
+          'delta_mcv', 'delta_platelet', 'delta_rbc', 'delta_rdw', 'delta_wbc',
+          'delta_inr', 'delta_pt', 'delta_ptt', 'delta_alt', 'delta_alp',
+          'delta_ast', 'delta_bilirubin_total',
+          'delta_albumin', 'delta_aniongap', 'delta_bicarbonate', 'delta_bun', 'delta_calcium',
+          'delta_chloride', 'delta_creatinine', 'delta_glucose_lab', 'delta_sodium',
+          'delta_potassium', 'delta_ph', 'delta_lactate', 'delta_heart_rate', 'delta_mbp',
+          'delta_resp_rate', 'delta_temperature', 'delta_glucose', 'delta_heart_rhythm']
+
+# get the inverse for the deltas -> the higher the delta the less accurate the feature is
+for d in deltas:
+    data[d] = data[d].apply(lambda x: 1/x if x != 0 else 1)
+
+# interaction terms for fts and deltas
+intrs = []
+for f, d in zip(fts, deltas):
+    intr_name = f"{f} * {d}"
+    data[intr_name] = data[f] * data[d]
+    intrs.append(intr_name)
+
+# impute missing data with 0 for the deltas before split 
+data[deltas] = data[deltas].fillna(0)
+data['delta_vent_start'] = data['delta_vent_start'].fillna(0)
+data['delta_rrt'] = data['delta_rrt'].fillna(0)
+data['delta_vp_start'] = data['delta_vp_start'].fillna(0)
+
+target = ['SaO2', 'hidden_hypoxemia'] 
 
 # define X and y
-X = data[fts]
+X = data[bas + rxs + fts + intrs]
 y = data[target]
 
 # Initialize the GroupShuffleSplit object
 gss = GroupShuffleSplit(n_splits=1, test_size=0.2, random_state=42)
+# ss = ShuffleSplit(n_splits=1, test_size=0.2, random_state=42)
 
 groups = data.subject_id
 
 train_idx, test_idx = next(gss.split(X, y, groups))
+# train_idx, test_idx = next(ss.split(X, y))
 
 # train val test split
 X_train, X_test = X.iloc[train_idx], X.iloc[test_idx]

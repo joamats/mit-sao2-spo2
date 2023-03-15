@@ -75,14 +75,9 @@ df['sofa_resp'] = df['sofa_resp'].fillna(0)
 
 # Replace nan with 0 in norepinephrine_equivalent_dose -> Baseline
 df['norepinephrine_equivalent_dose'] = df['norepinephrine_equivalent_dose'].fillna(0)
-# No ventilation
+# No ventilation information -> assume best case scenario
 df['ventilation_status'] = df['ventilation_status'].fillna(0)
-
-# impute missing data before split -> need to find a better way!
-df['delta_vent_start'] = df['delta_vent_start'].fillna(0)
-df['delta_rrt'] = df['delta_rrt'].fillna(0)
-df['delta_vp_start'] = df['delta_vp_start'].fillna(0)
-
+# No FiO2 information -> assume room air
 df['FiO2'] = df['FiO2'].fillna(21) # Room Air O2 %
 
 # Let's keep just the first pair per patient (it's been sorted by subject_id, stay_id,time)

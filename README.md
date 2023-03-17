@@ -29,7 +29,7 @@
 | calcium                | Calcium                   | mg/dL          | 8.5 - 10.5                | 9.5            |
 | chloride               | Chloride                  | mEq/L        | 96 - 106                   | 101.0         |
 | creatinine             | Creatinine                | mg/dL         | 0.6 - 1.2                  | 0.9           
-| glucose_lab            | Glucose (lab)         | mg/dL       | 70 - 99                | 84.5             |
+| glucose_lab            | Glucose         | mg/dL       | 70 - 99                | 84.5             |
 | sodium                 | Sodium                | mEq/L       | 135 - 145              | 140              |
 | potassium              | Potassium             | mEq/L       | 3.5 - 5.0              | 4.25             |
 | ph                     | pH                    | -            | 7.35 - 7.45            | 7.4              |
@@ -38,3 +38,11 @@
 | mbp                    | Mean Blood Pressure   | mmHg        | 70 - 105               | 87.5             |
 | resp_rate              | Respiratory Rate      | breaths/min | 12 - 20                | 16               |
 | temperature            | Temperature           | ºC          | 36.1 - 37.2            | 36.65            |
+
+### References
+
+https://www.testing.com/tests/
+https://www.mountsinai.org/health-library/special-topic/vital-signs
+https://www.iapac.org/fact-sheet/normal-laboratory-values/
+https://emedicine.medscape.com/article/2172316-overview
+

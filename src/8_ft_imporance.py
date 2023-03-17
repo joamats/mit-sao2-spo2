@@ -34,13 +34,13 @@ explainer = shap.Explainer(model)
 shap_values = explainer(X_test)
 
 # plot the SHAP values for each feature
-fig, ax = plt.subplots(figsize=(10, 8))
-shap.plots.beeswarm(shap_values, max_display=20, show=False)
+fig, ax = plt.subplots(figsize=(6, 8))
+shap.plots.beeswarm(shap_values, max_display=10, show=False)
 plt.tight_layout()
 plt.savefig('results/xgb_shap_plot.png', dpi=300)
 
 # plot the most important features
-fig, ax = plt.subplots(figsize=(10, 8))
-shap.plots.bar(shap_values, max_display=20, show=False)
+fig, ax = plt.subplots(figsize=(6, 8))
+shap.plots.bar(shap_values, max_display=10, show=False)
 plt.tight_layout()
 plt.savefig('results/xgb_ft_plot.png', dpi=300)

@@ -12,7 +12,7 @@ rxs = ['ventilation_status', 'invasive_vent', 'rrt',
        'delta_vent_start', 'delta_rrt', 'delta_vp_start',
        'vasopressors', 'norepinephrine_equivalent_dose']
 
-fts = ['FiO2',       
+fts = ['FiO2_0', 'FiO2_2', 'FiO2_3', 'FiO2_4',      
        'sofa_coag', 'sofa_liver', 'sofa_cv', 'sofa_cns', 'sofa_renal', 'sofa_resp',
        'hemoglobin', 'hematocrit', 'mch', 'mchc', 'mcv', 'platelet',
        'rbc', 'rdw', 'wbc', 'inr', 'pt', 'ptt', 'alt', 'alp', 'ast',
@@ -22,7 +22,7 @@ fts = ['FiO2',
        'heart_rate', 'mbp', 'resp_rate', 'temperature',
        'glucose', 'heart_rhythm']
 
-deltas = ['delta_FiO2',
+deltas = ['delta_FiO2_0', 'delta_FiO2_2', 'delta_FiO2_3', 'delta_FiO2_4',
           'delta_sofa_coag', 'delta_sofa_liver', 'delta_sofa_cv',
           'delta_sofa_cns', 'delta_sofa_renal', 'delta_sofa_resp',
           'delta_hemoglobin', 'delta_hematocrit', 'delta_mch', 'delta_mchc',
@@ -33,6 +33,7 @@ deltas = ['delta_FiO2',
           'delta_chloride', 'delta_creatinine', 'delta_glucose_lab', 'delta_sodium',
           'delta_potassium', 'delta_ph', 'delta_lactate', 'delta_heart_rate', 'delta_mbp',
           'delta_resp_rate', 'delta_temperature', 'delta_glucose', 'delta_heart_rhythm']
+  
 
 # get the inverse for the deltas -> the higher the delta the less accurate the feature is
 for d in deltas:
@@ -57,7 +58,6 @@ data['sofa_resp'] = data['sofa_resp'].fillna(0)
 
 # No FiO2 information -> assume room air, but if supplemental o2, another value
 data['FiO2'] = data['FiO2'].fillna(21) # Room Air O2 %
-
 
 # define X and y
 X = data[bas + rxs + fts + deltas]

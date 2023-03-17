@@ -4,9 +4,6 @@ from sklearn.model_selection import GroupShuffleSplit, ShuffleSplit
 # load data
 data = pd.read_csv('data/MIMIC_IV_clean.csv')
 
-# need to check who's the people being dropped!
-data = data[data['delta_SpO2'] >= -90]
-
 bas = ['SpO2', 'delta_SpO2',
        'anchor_age','sex_female', 'race_group', 'language',
        'CCI', 'SOFA_admission']
@@ -41,13 +38,6 @@ deltas = ['delta_FiO2',
 for d in deltas:
     data[d] = data[d].apply(lambda x: 1/x if x != 0 else 1)
 
-# interaction terms for fts and deltas
-intrs = []
-for f, d in zip(fts, deltas):
-    intr_name = f"{f} * {d}"
-    data[intr_name] = data[f] * data[d]
-    intrs.append(intr_name)
-
 # impute missing data with 0 for the deltas before split 
 data[deltas] = data[deltas].fillna(0)
 data['delta_vent_start'] = data['delta_vent_start'].fillna(0)
@@ -56,8 +46,21 @@ data['delta_vp_start'] = data['delta_vp_start'].fillna(0)
 
 target = ['SaO2', 'hidden_hypoxemia'] 
 
+# Missingness
+# Replace nan with 0 in SOFA -> Assuming best case scenario
+data['sofa_coag'] = data['sofa_coag'].fillna(0)
+data['sofa_liver'] = data['sofa_liver'].fillna(0)
+data['sofa_cv'] = data['sofa_cv'].fillna(0)
+data['sofa_cns'] = data['sofa_cns'].fillna(0)
+data['sofa_renal'] = data['sofa_renal'].fillna(0)
+data['sofa_resp'] = data['sofa_resp'].fillna(0)
+
+# No FiO2 information -> assume room air, but if supplemental o2, another value
+data['FiO2'] = data['FiO2'].fillna(21) # Room Air O2 %
+
+
 # define X and y
-X = data[bas + rxs + fts + intrs]
+X = data[bas + rxs + fts + deltas]
 y = data[target]
 
 # Initialize the GroupShuffleSplit object
@@ -73,6 +76,10 @@ train_idx, test_idx = next(gss.split(X, y, groups))
 X_train, X_test = X.iloc[train_idx], X.iloc[test_idx]
 y_train, y_test = y.iloc[train_idx], y.iloc[test_idx]
 
+# Fill missing values with mean for now
+X_train = X_train.fillna(X_train.mean())
+X_test = X_test.fillna(X_test.mean())
+
 # Check dimensions
 print("Train set shape: ", X_train.shape)
 print("Test set shape: ", X_test.shape)
@@ -86,10 +93,6 @@ if train_subjects.intersection(test_subjects):
     print("Error: Subjects in both training and testing sets")
 else:
     print("Subjects in training and testing sets are unique")
-
-# impute missing data after split -> check median vs mean
-X_train = X_train.fillna(X_train.mean())
-X_test = X_test.fillna(X_test.mean())
 
 # Save data, ML ready
 X_train.to_csv('data/ML/X_train.csv', index=False)

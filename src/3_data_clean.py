@@ -1,9 +1,24 @@
 import pandas as pd
 
-df = pd.read_csv('data/MIMIC_IV.csv')
+df_raw = pd.read_csv('data/MIMIC_IV.csv')
 
-# Clamp values to 60-100
+# keep only pairs within 10 min
+df = df_raw[df_raw['delta_SpO2'] >= -10]
+
+print("After Dropping Pairs not within 10 minutes")
+print(f"No. Subjects: {df.subject_id.nunique()}")
+print(df.race_group.value_counts()/len(df))
+print(df.language.value_counts()/len(df))
+print(df.gender.value_counts()/len(df))
+
+# Clamp values to 65-100
 df = df[(df.SaO2 <= 100) & (df.SpO2 <= 100) & (df.SaO2 >= 65) & (df.SpO2 >= 65)]
+
+print("After Dropping Pairs out of 65-100")
+print(f"No. Subjects: {df.subject_id.nunique()}")
+print(df.race_group.value_counts()/len(df))
+print(df.language.value_counts()/len(df))
+print(df.gender.value_counts()/len(df))
 
 # Drop features with high missingness, as reported in table 1 raw
 df = df.drop(columns=['BMI', 'd_dimer', 'fibrinogen', 'thrombin',
@@ -19,7 +34,6 @@ df['ventilation_status'] = df['ventilation_status'].map({'None': 0,
                                                          'InvasiveVent': 3,
                                                          'Tracheostomy': 4,
                                                          })
-
 
 df['race_group'] = df['race_group'].map({'White': 1,
                                          'Hispanic': 2,
@@ -65,25 +79,11 @@ df['heart_rhythm'] = category_column.map(category_map)
 
 df['vasopressors'] = df.norepinephrine_equivalent_dose.apply(lambda x: 1 if x > 0 else 0)
 
-# Replace nan with 0 in SOFA -> Assuming best case scenario
-df['sofa_coag'] = df['sofa_coag'].fillna(0)
-df['sofa_liver'] = df['sofa_liver'].fillna(0)
-df['sofa_cv'] = df['sofa_cv'].fillna(0)
-df['sofa_cns'] = df['sofa_cns'].fillna(0)
-df['sofa_renal'] = df['sofa_renal'].fillna(0)
-df['sofa_resp'] = df['sofa_resp'].fillna(0)
-
 # Replace nan with 0 in norepinephrine_equivalent_dose -> Baseline
 df['norepinephrine_equivalent_dose'] = df['norepinephrine_equivalent_dose'].fillna(0)
 # No ventilation information -> assume best case scenario
 df['ventilation_status'] = df['ventilation_status'].fillna(0)
-# No FiO2 information -> assume room air
-df['FiO2'] = df['FiO2'].fillna(21) # Room Air O2 %
 
-# Let's keep just the first pair per patient (it's been sorted by subject_id, stay_id,time)
-df_final = df#.groupby('subject_id').first().reset_index()
 
-print(f"{(len(df) - len(df_final))/len(df)*100:.2f}% rows dropped \
-      \n{len(df_final)} rows remaining")
 
-df_final.to_csv("data/MIMIC_IV_clean.csv")
+df.to_csv("data/MIMIC_IV_clean.csv")

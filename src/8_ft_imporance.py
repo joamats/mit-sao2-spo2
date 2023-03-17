@@ -9,7 +9,7 @@ matplotlib.use('TKAgg')
 X_test = pd.read_csv('data/ML/X_test.csv')
 
 # Load the model from a file
-filename = "models/xgboost.pkl"
+filename = "models/xgbr.pkl"
 model = load_model(filename)
 
 # Get Feature Importance from XGBoost

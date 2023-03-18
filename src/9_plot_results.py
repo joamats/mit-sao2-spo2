@@ -4,16 +4,17 @@ import matplotlib.pyplot as plt
 import matplotlib
 matplotlib.use('TKAgg')
 
-def plot_results(model_name, title):
+def plot_results(model_name):
 
     # load the data
     data = pd.read_excel(f'results/{model_name}.xlsx', index_col=0)
     data = data.drop('Overall', axis=1)
+    data = data.rename(columns={"Hispanic": "Hisp."})
 
     xx = np.arange(len(data.columns))
 
     # create the first subplot with baseline and model R²
-    fig, axs = plt.subplots(1,3, figsize=(14, 4))
+    fig, axs = plt.subplots(1,3, figsize=(10, 3))
     axs[0].bar(xx-.3, data.loc['Baseline R²'] * 100,
             width=.3, 
             color='lightgray', label='Baseline')
@@ -22,7 +23,7 @@ def plot_results(model_name, title):
             width=.3, #alpha=.8,
             color='mediumseagreen', label='Model')
 
-    axs[0].set_title('SaO2 vs. SpO2 Goodness of Fit')
+    axs[0].set_title('Goodness of Fit')
     axs[0].set_xticks(xx, data.columns)
     axs[0].set_xlabel("Race Group")
     axs[0].set_ylabel('R² (%)')
@@ -39,7 +40,7 @@ def plot_results(model_name, title):
             width=.3,
             color='mediumseagreen', label='Model')
 
-    axs[1].set_title('Error in SaO2 vs. SpO2 values')
+    axs[1].set_title('Error')
     axs[1].set_xticks(xx, data.columns)
     axs[1].set_xlabel("Race Group")
     axs[1].set_ylabel('RMSE (absolute change in %)')
@@ -56,7 +57,7 @@ def plot_results(model_name, title):
             width=.3,
             color='mediumseagreen', label='Model')
 
-    axs[2].set_title('Presence of Hidden Hypoxemias, H.H.')
+    axs[2].set_title('Hidden Hypoxemias, H.H.')
     axs[2].set_xticks(xx, data.columns)
     axs[2].set_xlabel("Race Group")
     axs[2].set_ylabel('H.H. (%)')
@@ -65,13 +66,12 @@ def plot_results(model_name, title):
     axs[2].legend(loc='upper left', bbox_to_anchor=(1.05, .6))
 
     # add a title and save the figure
-    plt.suptitle(f'SaO2 - SpO2 Correction Model{title}', fontsize=16)
+    plt.suptitle(f'SaO2 - SpO2 Correction Model', fontsize=16)
     plt.tight_layout()
     plt.savefig(f'results/{model_name}.png', dpi=300)
 
 
 model_names = ["xgbr_wSOFA", "xgbr_woSOFA"]
-titles = [', with SOFA Respiratory', ', without SOFA Respiratory']
 
-for m, t in zip(model_names, titles):
-    plot_results(m,t)
+for m in model_names:
+    plot_results(m)

@@ -4,7 +4,6 @@ import pandas as pd
 data = pd.read_csv('data/MIMIC_IV_clean.csv')
 
 # Groupby Variable
-data['race_white'] = data.race_group.apply(lambda x: "White" if x == 1 else "Non-White")
 groupby = ['race_group']
 
 # Continuous Variables

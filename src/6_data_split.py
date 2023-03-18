@@ -34,30 +34,7 @@ deltas = ['delta_FiO2_0', 'delta_FiO2_2', 'delta_FiO2_3', 'delta_FiO2_4',
           'delta_potassium', 'delta_ph', 'delta_lactate', 'delta_heart_rate', 'delta_mbp',
           'delta_resp_rate', 'delta_temperature', 'delta_glucose', 'delta_heart_rhythm']
   
-
-# get the inverse for the deltas -> the higher the delta the less accurate the feature is
-for d in deltas:
-    data[d] = data[d].apply(lambda x: 1/x if x != 0 else 1)
-
-# impute missing data with 0 for the deltas before split 
-data[deltas] = data[deltas].fillna(0)
-data['delta_vent_start'] = data['delta_vent_start'].fillna(0)
-data['delta_rrt'] = data['delta_rrt'].fillna(0)
-data['delta_vp_start'] = data['delta_vp_start'].fillna(0)
-
 target = ['SaO2', 'hidden_hypoxemia'] 
-
-# Missingness
-# Replace nan with 0 in SOFA -> Assuming best case scenario
-data['sofa_coag'] = data['sofa_coag'].fillna(0)
-data['sofa_liver'] = data['sofa_liver'].fillna(0)
-data['sofa_cv'] = data['sofa_cv'].fillna(0)
-data['sofa_cns'] = data['sofa_cns'].fillna(0)
-data['sofa_renal'] = data['sofa_renal'].fillna(0)
-data['sofa_resp'] = data['sofa_resp'].fillna(0)
-
-# No FiO2 information -> assume room air, but if supplemental o2, another value
-data['FiO2'] = data['FiO2'].fillna(21) # Room Air O2 %
 
 # define X and y
 X = data[bas + rxs + fts + deltas]

@@ -76,31 +76,15 @@ category_map = {'1st AV (First degree AV Block)': 0,
                 'WAP (Wandering atrial pacemaker)': 1}
 
 df['heart_rhythm'] = df['heart_rhythm'].map(category_map)
+# If no heart rhythm information is available, assume normal rhythm
 df['heart_rhythm'] = df['heart_rhythm'].fillna(0)
 
 df['vasopressors'] = df.norepinephrine_equivalent_dose.apply(lambda x: 1 if x > 0 else 0)
 
 # Replace nan with 0 in norepinephrine_equivalent_dose -> Baseline
 df['norepinephrine_equivalent_dose'] = df['norepinephrine_equivalent_dose'].fillna(0)
+
 # No ventilation information -> assume best case scenario
 df['ventilation_status'] = df['ventilation_status'].fillna(0)
 
-# one-hot encoding of FiO2 -> this way we avoid having to impute FiO2 for vent_status = 1
-df['FiO2_0'] = df.apply(lambda row: 21          if row['ventilation_status'] == 0 else 0, axis=1)
-df['FiO2_2'] = df.apply(lambda row: row['FiO2'] if row['ventilation_status'] == 2 else 0, axis=1)
-df['FiO2_3'] = df.apply(lambda row: row['FiO2'] if row['ventilation_status'] == 3 else 0, axis=1)
-df['FiO2_4'] = df.apply(lambda row: row['FiO2'] if row['ventilation_status'] == 4 else 0, axis=1)
-
-# and same for these deltas
-df['delta_FiO2_0'] = df.apply(lambda row: row['delta_FiO2'] if row['ventilation_status'] == 0 else 0, axis=1)
-df['delta_FiO2_2'] = df.apply(lambda row: row['delta_FiO2'] if row['ventilation_status'] == 2 else 0, axis=1)
-df['delta_FiO2_3'] = df.apply(lambda row: row['delta_FiO2'] if row['ventilation_status'] == 3 else 0, axis=1)
-df['delta_FiO2_4'] = df.apply(lambda row: row['delta_FiO2'] if row['ventilation_status'] == 4 else 0, axis=1)
-
-# df['sofa_resp_proxy'] = df.apply(lambda row: 0 if row['ventilation_status'] == 0 else(
-#                                              1.5 if (row['ventilation_status'] == 1) else(
-#                                              3 if ((row['ventilation_status'] >= 3) & (row['FiO2'] <= 50)) | (row['ventilation_status'] == 2) else(
-#                                              4 if (row['ventilation_status'] >= 3)  & (row['FiO2'] > 50) else(
-#                                              0)))), axis=1)
-
-df.to_csv("data/MIMIC_IV_clean.csv")
+df.to_csv("data/MIMIC_IV_clean.csv", index=False)

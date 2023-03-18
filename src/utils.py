@@ -77,13 +77,14 @@ def evaluate_model(model, X_test, y_test, name):
         
         return results
 
-    races = {'Overall': [True] * len(y_test),
-             'White': X_test.race_group == 1,
-             'Hispanic': X_test.race_group == 2,
+    races = {
              'Asian': X_test.race_group == 3,
+             'Black': X_test.race_group == 5,
+             'Hispanic': X_test.race_group == 2,
              'Other': X_test.race_group == 4,
-             'Black': X_test.race_group == 5
-             }
+             'White': X_test.race_group == 1,
+             'Overall': [True] * len(y_test)
+            }
 
     results_list = []
     for r in races.items():
@@ -96,10 +97,10 @@ def evaluate_model(model, X_test, y_test, name):
     pivoted_df = melted_df.pivot(index=['Metric'], columns='Race', values='value')
     pivoted_df = pivoted_df[race_order].reindex(metric_order)
 
-    pivoted_df.to_excel(f'results/{name}.xlsx')
-    pivoted_df.to_latex(f'results/{name}.tex')
+    pivoted_df.to_excel(f'results/{name}.xlsx', float_format='%.3f')
+    pivoted_df.to_latex(f'results/{name}.tex', float_format='%.3f')
 
-
+# Plot for the SaO2-SpO2 relationship maps
 def sao2_spo2_plot(df, name, lbl_text):
 
     r2 = r2_score(df.SaO2, df.SpO2)

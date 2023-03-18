@@ -42,20 +42,14 @@ y = data[target]
 
 # Initialize the GroupShuffleSplit object
 gss = GroupShuffleSplit(n_splits=1, test_size=0.2, random_state=42)
-# ss = ShuffleSplit(n_splits=1, test_size=0.2, random_state=42)
 
 groups = data.subject_id
 
 train_idx, test_idx = next(gss.split(X, y, groups))
-# train_idx, test_idx = next(ss.split(X, y))
 
 # train val test split
 X_train, X_test = X.iloc[train_idx], X.iloc[test_idx]
 y_train, y_test = y.iloc[train_idx], y.iloc[test_idx]
-
-# Fill missing values with mean for now
-X_train = X_train.fillna(X_train.mean())
-X_test = X_test.fillna(X_test.mean())
 
 # Check dimensions
 print("Train set shape: ", X_train.shape)

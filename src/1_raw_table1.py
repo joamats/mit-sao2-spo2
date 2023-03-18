@@ -4,7 +4,6 @@ import pandas as pd
 data = pd.read_csv('data/MIMIC_IV.csv')
 
 data['race_white'] = data.race_group == 'White'
-d
 
 groupby = ['race_white']
 

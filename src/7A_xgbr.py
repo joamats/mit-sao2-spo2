@@ -37,7 +37,7 @@ model = XGBRegressor(**best_params)
 model.fit(X_train, y_train)
 
 # Make predictions on the train set
-evaluate_model(model, X_train, y_train, f"{model_name}_train")
+# evaluate_model(model, X_train, y_train, f"{model_name}_train")
 
 # Save the model to a file
 filename = f"models/{model_name}.pkl"

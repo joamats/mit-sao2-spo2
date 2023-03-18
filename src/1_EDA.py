@@ -39,7 +39,7 @@ table1_raw = TableOne(data, columns=categorical+nonnormal,
                       smd=True, 
                       dip_test=True, normal_test=True, tukey_test=True, htest_name=True)
 
-table1_raw.to_excel('EDA/table1_rawW.xlsx')
+table1_raw.to_excel('EDA/raw_table1.xlsx')
 
 # Plots
 df = pd.read_csv('data/MIMIC_IV.csv')[['SaO2','SpO2','delta_SpO2', 'race_group']]
@@ -69,7 +69,7 @@ fig2.suptitle('SaO2 and SpO2 Density Distributions')
 fig2.savefig('EDA/dist_SaO2vsSpO2.png', dpi=300, bbox_inches='tight')
 
 
-colors = ['orange', 'green']
+colors = ['green', 'black']
 fig3, ax3 = plt.subplots(1, 1, sharex= True, sharey=True, figsize=(8,4))
 
 for i, r in enumerate(races):
@@ -77,10 +77,10 @@ for i, r in enumerate(races):
     sns.kdeplot(x=df[df.race_group == r].SpO2 - df[df.race_group == r].SaO2,
                 ax=ax3, color=colors[i], fill=True, label=r)
     
-ax3.set_xlim([-5,5])
+ax3.set_xlim([-4,4])
 ax3.legend(loc='upper left', ncol=1, fontsize=9)
 ax3.set_xlabel('SpO2 - SaO2 (%)')
-ax3.set_title('SpO2 - SaO2 Gap across Race')
+ax3.set_title('SpO2 - SaO2 Gap Distribution, White vs. Non-White Patients')
 
 fig3.savefig('EDA/dist_SaO2-SpO2.png', dpi=300, bbox_inches='tight')
 

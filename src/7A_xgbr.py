@@ -12,7 +12,7 @@ y_test = pd.read_csv('data/ML/y_test.csv')[['SaO2']]
 
 # weights = pd.read_csv('data/ML/y_train.csv')[['hidden_hypoxemia']] * .9 + .1 # HH count 10x more
 
-withSOFA = False
+withSOFA = True
 
 if withSOFA:
     model_name = "xgbr_wSOFA"
@@ -24,7 +24,7 @@ else:
     X_test = X_test.drop(columns=['delta_sofa_resp'])
 
 # fit the XGBoost regressor with the best hyperparameters - loaded afer 7A1
-best_params = {"objective": assym_loss,
+best_params = {#"objective": assym_loss,
                "colsample_bytree": 0.9,
                "gamma": 1.5,
                "max_depth": 3,

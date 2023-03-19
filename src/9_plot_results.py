@@ -66,7 +66,7 @@ def plot_results(model_name):
     axs[2].legend(loc='upper left', bbox_to_anchor=(1.05, .6))
 
     # add a title and save the figure
-    plt.suptitle(f'SaO2 - SpO2 Correction Model', fontsize=16)
+    plt.suptitle(f'SaO2 - SpO2 Correction Model', fontsize=14)
     plt.tight_layout()
     plt.savefig(f'results/{model_name}.png', dpi=300)
 

@@ -55,6 +55,7 @@ midpoint_map = {
     'chloride': 101.0,
     'creatinine': 0.9,
     'glucose': 84.5,
+    'glucose_lab': 84.5,
     'sodium': 140.0,
     'potassium': 4.25,
     'ph': 7.4,
@@ -88,7 +89,7 @@ deltas = ['delta_FiO2_0', 'delta_FiO2_2', 'delta_FiO2_3', 'delta_FiO2_4',
 
 # get the inverse for the deltas -> the higher the delta the less accurate the feature is
 for d in deltas:
-    data[d] = data[d].apply(lambda x: 1/x if x != 0 else 1)
+    data[d] = data[d].apply(lambda x: 1/(1 + x**2) if x != 0 else 1)
 
 # impute missing data with 0 for the deltas
 data[deltas] = data[deltas].fillna(0)

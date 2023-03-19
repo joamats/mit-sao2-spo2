@@ -28,7 +28,7 @@ shap_values = explainer(X_test)
 # plot the SHAP values for each feature
 fig, ax = plt.subplots(figsize=(6, 8))
 shap.plots.beeswarm(shap_values, max_display=10, show=False)
-plt.title("Feature Importance: SHAP Values for Top 10 Features")
+plt.title("Feature Importance: SHAP Values for Top 10 Features", fontsize=14)
 plt.tight_layout()
 plt.savefig(f'results/shap_{model_name}.png', dpi=300)
 

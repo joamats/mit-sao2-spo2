@@ -17,11 +17,11 @@ def plot_results(model_name):
     fig, axs = plt.subplots(1,3, figsize=(10, 3))
     axs[0].bar(xx-.3, data.loc['Baseline R²'] * 100,
             width=.3, 
-            color='lightgray', label='Baseline')
+            color='lightgray', label='Observed')
 
     axs[0].bar(xx, data.loc['Model R²'] * 100,
             width=.3, #alpha=.8,
-            color='mediumseagreen', label='Model')
+            color='mediumseagreen', label='Predicted')
 
     axs[0].set_title('Goodness of Fit')
     axs[0].set_xticks(xx, data.columns)
@@ -34,11 +34,11 @@ def plot_results(model_name):
     # create the second subplot with baseline and model RMSE
     axs[1].bar(xx-.3, data.loc['Baseline RMSE'],
             width=.3,
-            color='lightgray', label='Baseline')
+            color='lightgray', label='Observed')
 
     axs[1].bar(xx, data.loc['Model RMSE'],
             width=.3,
-            color='mediumseagreen', label='Model')
+            color='mediumseagreen', label='Predicted')
 
     axs[1].set_title('Error')
     axs[1].set_xticks(xx, data.columns)
@@ -51,11 +51,11 @@ def plot_results(model_name):
     # create the second subplot with baseline and model HH
     axs[2].bar(xx-.3, data.loc['Baseline HH'] / data.loc['N'] * 100,
             width=.3,
-            color='lightgray', label='Baseline')
+            color='lightgray', label='Observed')
 
     axs[2].bar(xx, data.loc['Model HH'] / data.loc['N'] * 100,
             width=.3,
-            color='mediumseagreen', label='Model')
+            color='mediumseagreen', label='Predicted')
 
     axs[2].set_title('Hidden Hypoxemias, H.H.')
     axs[2].set_xticks(xx, data.columns)

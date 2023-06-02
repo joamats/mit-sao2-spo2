@@ -25,7 +25,7 @@ def plot_results(model_name):
 
     axs[0].set_title('Goodness of Fit')
     axs[0].set_xticks(xx, data.columns)
-    axs[0].set_xlabel("Race Group")
+    axs[0].set_xlabel("Racial-Ethnic Group")
     axs[0].set_ylabel('R² (%)')
     axs[0].set_ylim([-100, 100])
     axs[0].axhline(y=0, color='k', linewidth=.7)
@@ -42,7 +42,7 @@ def plot_results(model_name):
 
     axs[1].set_title('Error')
     axs[1].set_xticks(xx, data.columns)
-    axs[1].set_xlabel("Race Group")
+    axs[1].set_xlabel("Racial-Ethnic Group")
     axs[1].set_ylabel('RMSE (absolute change in %)')
     axs[1].set_ylim([0, 5])
     plt.xticks(xx, data.columns)
@@ -59,7 +59,7 @@ def plot_results(model_name):
 
     axs[2].set_title('Hidden Hypoxemias, H.H.')
     axs[2].set_xticks(xx, data.columns)
-    axs[2].set_xlabel("Race Group")
+    axs[2].set_xlabel("Racial-Ethnic Group")
     axs[2].set_ylabel('H.H. (%)')
     axs[2].set_ylim([0, 4])
     plt.xticks(xx, data.columns)
